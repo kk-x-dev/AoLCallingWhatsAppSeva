@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Call Status Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="title-section">
+                <h1>Call Status Dashboard</h1>
+                <span id="current-date" class="date-badge">-- --- ----</span>
+            </div>
+            <!-- Header Quick Stats -->
+            <div class="header-quick-stats">
+                <div class="quick-stat-item">
+                    <span class="stat-value" id="header-total">0</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="quick-stat-item completed">
+                    <span class="stat-value" id="header-completed">0</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+                <div class="quick-stat-item remaining">
+                    <span class="stat-value" id="header-remaining">0</span>
+                    <span class="stat-label">Remaining</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <!-- Number Input Section -->
+        <section class="section card input-section" id="input-container">
+            <h2 class="section-title">Import Numbers</h2>
+            <p class="section-description">Paste phone numbers (one per line or separated by spaces/commas) to begin your calling list.</p>
+            
+            <textarea id="phone-numbers-input" placeholder="Paste phone numbers here...&#10;&#10;Example:&#10;9876543210&#10;9988776655&#10;8877665544" rows="5"></textarea>
+            
+            <div class="button-group">
+                <button id="btn-load-numbers" class="btn btn-primary">
+                    <span class="btn-icon">⚡</span> Load Numbers
+                </button>
+            </div>
+        </section>
+
+        <!-- Search and Filter Section -->
+        <section class="section search-filter-section">
+            <div class="search-box-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="tel" id="search-input" placeholder="Search phone number..." aria-label="Search phone number">
+                <button id="btn-clear-search" class="btn-clear-search" style="display: none;">✕</button>
+            </div>
+
+            <!-- Filter Chips -->
+            <div class="filter-chips-container" id="filter-chips">
+                <button class="chip active" data-filter="all">All</button>
+                <button class="chip" data-filter="Not Called">Not Called</button>
+                <button class="chip" data-filter="Interested">Interested</button>
+                <button class="chip" data-filter="HP">HP</button>
+                <button class="chip" data-filter="Future Lead">Future Lead</button>
+                <button class="chip" data-filter="Not Interested">Not Interested</button>
+            </div>
+        </section>
+
+        <!-- List Section -->
+        <section class="section list-section">
+            <div class="list-header">
+                <h2>Calling Queue (<span id="visible-cards-count">0</span>)</h2>
+                <div class="actions-menu">
+                    <button id="btn-import-again" class="btn btn-text btn-sm" style="display: none;">
+                        ➕ Add More Numbers
+                    </button>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state">
+                <div class="empty-icon">📱</div>
+                <h3>No numbers loaded</h3>
+                <p>Paste some phone numbers in the section above and click "Load Numbers" to start calling.</p>
+            </div>
+
+            <!-- Cards Container -->
+            <div id="cards-container" class="cards-grid">
+                <!-- Dynamically populated numbers cards -->
+            </div>
+        </section>
+        
+        <!-- Utility / Action Buttons (Reset, Export etc) -->
+        <section class="section utility-section" id="utility-actions" style="display: none;">
+            <div class="utility-grid">
+                <button id="btn-reset" class="btn btn-danger-outline">
+                    🗑️ Reset All
+                </button>
+                <button id="btn-export" class="btn btn-secondary-outline">
+                    💾 Export Report (.txt)
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Sticky Bottom Statistics Bar -->
+    <div class="sticky-stats-bar" id="sticky-stats-bar" style="display: none;">
+        <div class="stats-bar-container">
+            <div class="stats-bar-header">
+                <h3>Live Dashboard Summary</h3>
+                <span class="toggle-stats" id="btn-toggle-stats">📊 Details</span>
+            </div>
+            
+            <!-- Compact Stat Strip -->
+            <div class="stats-strip">
+                <div class="strip-item"><span class="label">Total:</span> <strong id="strip-total">0</strong></div>
+                <div class="strip-item text-success"><span class="label">Done:</span> <strong id="strip-completed">0</strong></div>
+                <div class="strip-item text-muted"><span class="label">Left:</span> <strong id="strip-remaining">0</strong></div>
+            </div>
+
+            <!-- Expanded Stat Grid -->
+            <div class="stats-expanded-grid" id="stats-expanded-grid" style="display: none;">
+                <div class="stat-detail-item gray">
+                    <span class="detail-label">Not Called</span>
+                    <span class="detail-val" id="stat-not-called">0</span>
+                </div>
+                <div class="stat-detail-item green">
+                    <span class="detail-label">Interested</span>
+                    <span class="detail-val" id="stat-interested">0</span>
+                </div>
+                <div class="stat-detail-item blue">
+                    <span class="detail-label">HP</span>
+                    <span class="detail-val" id="stat-hp">0</span>
+                </div>
+                <div class="stat-detail-item orange">
+                    <span class="detail-label">Future Lead</span>
+                    <span class="detail-val" id="stat-future">0</span>
+                </div>
+                <div class="stat-detail-item red">
+                    <span class="detail-label">Not Interested</span>
+                    <span class="detail-val" id="stat-not-interested">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button id="btn-floating-share" class="floating-share-btn" aria-label="Share Report" style="display: none;">
+        <span class="share-icon-fab">📤</span>
+        <span class="share-text-fab">Share Report</span>
+    </button>
+
+    <!-- Modal Backdrop -->
+    <div class="modal-backdrop" id="share-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Share Summary Report</h2>
+                <button class="modal-close" id="btn-modal-close-times">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-help">Below is the compiled summary of your calling session. You can copy it or share it natively.</p>
+                <textarea id="report-preview" readonly rows="12"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-copy-report" class="btn btn-secondary flex-1">📋 Copy Report</button>
+                <button id="btn-share-native" class="btn btn-primary flex-1">🔗 Share</button>
+                <button id="btn-close-modal" class="btn btn-text-outline">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script loading -->
+    <script src="script.js"></script>
+</body>
+</html>
